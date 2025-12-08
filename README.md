@@ -1,4 +1,6 @@
-# TrackHands
+<img src="public/icons/macos-icon.png" alt="TrackHands Icon" width="96" height="96">
+
+<h1>TrackHands</h1>
 
 TrackHands is a cross-platform desktop app that detects when your fingers are near your mouth and reminds you to stop.
 
