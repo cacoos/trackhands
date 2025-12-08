@@ -32,6 +32,14 @@ TrackHands is a cross-platform desktop app that detects when your fingers are ne
 
 Download the latest release for your platform from the [Releases](https://github.com/cacoos/trackhands/releases) page.
 
+#### macOS Note
+
+Since the app is not signed with an Apple Developer certificate, macOS may show a warning that the app "is damaged and can't be opened." To fix this, run the following command in Terminal after installing:
+
+```bash
+xattr -cr /Applications/TrackHands.app
+```
+
 ### Building from Source
 
 1. Clone the repository:
