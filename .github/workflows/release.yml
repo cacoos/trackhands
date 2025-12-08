@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   release:
@@ -13,14 +13,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+          - platform: "macos-latest"
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-latest"
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-22.04"
+            args: ""
+          - platform: "windows-latest"
+            args: ""
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -36,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -64,15 +64,30 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: 'TrackHands ${{ github.ref_name }}'
+          releaseName: "TrackHands ${{ github.ref_name }}"
           releaseBody: |
-            See the [README](https://github.com/cacoos/trackhands#readme) for installation instructions.
-            
-            **macOS users**: If you see "app is damaged" error, run:
-            ```bash
-            xattr -cr /Applications/TrackHands.app
-            ```
+            ## Downloads
+
+            ### 🍎 macOS
+            - **Apple Silicon (M1/M2/M3)**: `TrackHands_x.x.x_aarch64.dmg`
+            - **Intel**: `TrackHands_x.x.x_x64.dmg`
+
+            > ⚠️ If you see "app is damaged" error, run:
+            > ```bash
+            > xattr -cr /Applications/TrackHands.app
+            > ```
+
+            ### 🪟 Windows
+            - **Installer**: `TrackHands_x.x.x_x64-setup.exe`
+            - **MSI**: `TrackHands_x.x.x_x64_en-US.msi`
+
+            ### 🐧 Linux
+            - **Debian/Ubuntu**: `TrackHands_x.x.x_amd64.deb`
+            - **Fedora/RHEL**: `TrackHands-x.x.x-1.x86_64.rpm`
+            - **AppImage**: `TrackHands_x.x.x_amd64.AppImage`
+
+            ---
+            See the [README](https://github.com/cacoos/trackhands#readme) for more details.
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
-
