@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Capability for the main window","local":true,"windows":["main","popover","warning","settings"],"permissions":["core:default","core:window:allow-close","core:window:allow-show","core:window:allow-hide","core:window:allow-set-focus","core:window:allow-center","store:default"]}}

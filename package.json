@@ -1,0 +1,64 @@
+{
+  "name": "trackhands",
+  "version": "1.0.0",
+  "description": "Detects when your fingers are near your mouth and reminds you to stop",
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Joaquin Ossandon",
+    "url": "https://x.com/cacoos"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cacoos/trackhands.git"
+  },
+  "homepage": "https://github.com/cacoos/trackhands",
+  "bugs": {
+    "url": "https://github.com/cacoos/trackhands/issues"
+  },
+  "keywords": [
+    "fingers-near-mouth",
+    "habit-tracker",
+    "tauri",
+    "mediapipe",
+    "hand-detection",
+    "face-detection"
+  ],
+  "scripts": {
+    "dev": "tauri dev",
+    "dev:web": "vite",
+    "build": "tauri build",
+    "build:web": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"*.{json,js,ts}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"*.{json,js,ts}\""
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.14",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-store": "^2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^16.5.0",
+    "postcss": "^8.4.49",
+    "prettier": "^3.7.4",
+    "tailwindcss": "^3.4.16",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.48.1",
+    "vite": "^6.0.1"
+  }
+}
