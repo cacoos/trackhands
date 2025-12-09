@@ -6,19 +6,24 @@ use tauri::{
 };
 use std::sync::Mutex;
 
-/// Minimum window width to consider the popover visible (vs minimized to 1x1)
 const MIN_VISIBLE_WIDTH: u32 = 50;
+
+const POPOVER_WIDTH: f64 = 320.0;
+const POPOVER_HEIGHT: f64 = 380.0;
+const TRAY_MARGIN_Y: f64 = 5.0;
 
 #[cfg(target_os = "macos")]
 use objc2::{msg_send, MainThreadMarker};
 #[cfg(target_os = "macos")]
 use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
 
-struct WindowState {
-    position: (f64, f64),
+struct TrayIconPosition {
+    x: f64,
+    y: f64,
+    width: f64,
 }
 
-static POPOVER_STATE: Mutex<Option<WindowState>> = Mutex::new(None);
+static TRAY_POSITION: Mutex<Option<TrayIconPosition>> = Mutex::new(None);
 
 #[tauri::command]
 fn show_warning(app: AppHandle) {
@@ -55,15 +60,6 @@ fn is_popover_visible(app: AppHandle) -> bool {
 #[tauri::command]
 fn minimize_popover(app: AppHandle) {
     if let Some(window) = app.get_webview_window("popover") {
-        let position = window.outer_position().unwrap_or(tauri::PhysicalPosition::new(0, 0));
-        let scale = window.scale_factor().unwrap_or(1.0);
-        
-        if let Ok(mut state) = POPOVER_STATE.lock() {
-            *state = Some(WindowState {
-                position: (position.x as f64 / scale, position.y as f64 / scale),
-            });
-        }
-        
         let _ = window.set_size(tauri::LogicalSize::new(1.0, 1.0));
         let _ = window.set_position(tauri::LogicalPosition::new(0.0, 0.0));
     }
@@ -83,24 +79,28 @@ fn show_popover(app: &AppHandle) {
         let is_visible = size.width > MIN_VISIBLE_WIDTH;
         
         if is_visible {
-            let position = window.outer_position().unwrap_or(tauri::PhysicalPosition::new(0, 0));
-            let scale = window.scale_factor().unwrap_or(1.0);
-            
-            if let Ok(mut state) = POPOVER_STATE.lock() {
-                *state = Some(WindowState {
-                    position: (position.x as f64 / scale, position.y as f64 / scale),
-                });
-            }
-            
+            // Hide the popover
             let _ = window.set_size(tauri::LogicalSize::new(1.0, 1.0));
             let _ = window.set_position(tauri::LogicalPosition::new(0.0, 0.0));
         } else {
-            let saved = POPOVER_STATE.lock().ok().and_then(|s| s.as_ref().map(|state| state.position));
+            let _ = window.set_size(tauri::LogicalSize::new(POPOVER_WIDTH, POPOVER_HEIGHT));
             
-            let _ = window.set_size(tauri::LogicalSize::new(320.0, 380.0));
+            let scale = window.scale_factor().unwrap_or(2.0);
             
-            if let Some(pos) = saved {
-                let _ = window.set_position(tauri::LogicalPosition::new(pos.0, pos.1));
+            if let Ok(guard) = TRAY_POSITION.lock() {
+                if let Some(tray_pos) = guard.as_ref() {
+                    let tray_x = tray_pos.x / scale;
+                    let tray_y = tray_pos.y / scale;
+                    let tray_width = tray_pos.width / scale;
+                    
+                    let x = tray_x + (tray_width / 2.0) - (POPOVER_WIDTH / 2.0);
+
+                    let y = tray_y + TRAY_MARGIN_Y;
+                    
+                    let _ = window.set_position(tauri::LogicalPosition::new(x, y));
+                } else {
+                    let _ = window.center();
+                }
             } else {
                 let _ = window.center();
             }
@@ -146,9 +146,20 @@ pub fn run() {
                     if let TrayIconEvent::Click {
                         button: MouseButton::Left,
                         button_state: MouseButtonState::Up,
+                        rect,
                         ..
                     } = event
                     {
+                        let pos = rect.position.to_physical::<f64>(1.0);
+                        let size = rect.size.to_physical::<f64>(1.0);
+
+                        if let Ok(mut guard) = TRAY_POSITION.lock() {
+                            *guard = Some(TrayIconPosition {
+                                x: pos.x,
+                                y: pos.y,
+                                width: size.width,
+                            });
+                        }
                         show_popover(tray.app_handle());
                     }
                 })
@@ -158,7 +169,9 @@ pub fn run() {
                 .title("TrackHands")
                 .inner_size(1.0, 1.0)
                 .resizable(false)
-                .decorations(true)
+                .decorations(false)
+                .transparent(true)
+                .shadow(false)
                 .position(0.0, 0.0)
                 .build()?;
 
@@ -166,16 +179,6 @@ pub fn run() {
             popover.on_window_event(move |event| {
                 if let WindowEvent::CloseRequested { api, .. } = event {
                     api.prevent_close();
-                    
-                    let position = popover_clone.outer_position().unwrap_or(tauri::PhysicalPosition::new(0, 0));
-                    let scale = popover_clone.scale_factor().unwrap_or(1.0);
-                    
-                    if let Ok(mut state) = POPOVER_STATE.lock() {
-                        *state = Some(WindowState {
-                            position: (position.x as f64 / scale, position.y as f64 / scale),
-                        });
-                    }
-                    
                     let _ = popover_clone.set_size(tauri::LogicalSize::new(1.0, 1.0));
                     let _ = popover_clone.set_position(tauri::LogicalPosition::new(0.0, 0.0));
                 }
