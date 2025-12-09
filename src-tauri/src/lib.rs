@@ -177,10 +177,20 @@ pub fn run() {
 
             let popover_clone = popover.clone();
             popover.on_window_event(move |event| {
-                if let WindowEvent::CloseRequested { api, .. } = event {
-                    api.prevent_close();
-                    let _ = popover_clone.set_size(tauri::LogicalSize::new(1.0, 1.0));
-                    let _ = popover_clone.set_position(tauri::LogicalPosition::new(0.0, 0.0));
+                match event {
+                    WindowEvent::CloseRequested { api, .. } => {
+                        api.prevent_close();
+                        let _ = popover_clone.set_size(tauri::LogicalSize::new(1.0, 1.0));
+                        let _ = popover_clone.set_position(tauri::LogicalPosition::new(0.0, 0.0));
+                    }
+                    WindowEvent::Focused(false) => {
+                        let size = popover_clone.inner_size().unwrap_or(tauri::PhysicalSize::new(1, 1));
+                        if size.width > MIN_VISIBLE_WIDTH {
+                            let _ = popover_clone.set_size(tauri::LogicalSize::new(1.0, 1.0));
+                            let _ = popover_clone.set_position(tauri::LogicalPosition::new(0.0, 0.0));
+                        }
+                    }
+                    _ => {}
                 }
             });
 
