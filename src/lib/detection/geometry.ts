@@ -1,5 +1,9 @@
+import {
+  FINGER_TIP_INDICES,
+  MOUTH_LANDMARKS,
+  MOUTH_PADDING_RATIO,
+} from "@/lib/detection/constants";
 import type { Point, Rect } from "@/stores/app-store";
-import { FINGER_TIP_INDICES, MOUTH_LANDMARKS } from "@/lib/detection/constants";
 
 export function getMouthRect({
   landmarks,
@@ -20,7 +24,8 @@ export function getMouthRect({
   const minY = Math.min(...yCoords);
   const maxY = Math.max(...yCoords);
 
-  const padding = 10;
+  const padding = Math.round(videoHeight * MOUTH_PADDING_RATIO);
+
   return {
     x: minX - padding,
     y: minY - padding,

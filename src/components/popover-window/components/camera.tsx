@@ -1,4 +1,9 @@
 import { useDetection } from "@/hooks/use-detection";
+import {
+  FONT_SIZE_RATIO,
+  LABEL_OFFSET_RATIO,
+  SHADOW_OFFSET_RATIO,
+} from "@/lib/detection/constants";
 import { useAppStore } from "@/stores/app-store";
 import { useEffect, useRef } from "react";
 
@@ -102,14 +107,17 @@ export function Camera() {
 
         ctx.save();
         const labelX = mouthRect.x + mouthRect.width / 2;
-        const labelY = mouthRect.y - 10;
+        const labelOffset = videoHeight * LABEL_OFFSET_RATIO;
+        const labelY = mouthRect.y - labelOffset;
         ctx.translate(labelX, labelY);
         ctx.scale(-1, 1);
 
-        ctx.font = "bold 16px -apple-system, BlinkMacSystemFont, sans-serif";
+        const fontSize = Math.round(videoHeight * FONT_SIZE_RATIO);
+        const shadowOffset = Math.max(1, fontSize * SHADOW_OFFSET_RATIO);
+        ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
         ctx.textAlign = "center";
         ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
-        ctx.fillText("Mouth", 1, 1);
+        ctx.fillText("Mouth", shadowOffset, shadowOffset);
         ctx.fillStyle = "#ffffff";
         ctx.fillText("Mouth", 0, 0);
         ctx.restore();

@@ -12,3 +12,8 @@ export const HAND_LANDMARKER_MODEL =
   "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
 
 export const VISION_WASM_PATH = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
+
+export const MOUTH_PADDING_RATIO = 0.02;
+export const LABEL_OFFSET_RATIO = 0.02;
+export const FONT_SIZE_RATIO = 0.033;
+export const SHADOW_OFFSET_RATIO = 0.0625;
