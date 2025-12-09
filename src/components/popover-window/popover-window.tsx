@@ -12,9 +12,11 @@ export function PopoverWindow() {
     detectionSpeed,
     cameraResolution,
     warningDelay,
+    autoDismissDelay,
     saveDetectionSpeed,
     saveCameraResolution,
     saveWarningDelay,
+    saveAutoDismissDelay,
   } = useSettings();
 
   const handleMinimize = async () => {
@@ -36,9 +38,11 @@ export function PopoverWindow() {
           detectionSpeed={detectionSpeed}
           cameraResolution={cameraResolution}
           warningDelay={warningDelay}
+          autoDismissDelay={autoDismissDelay}
           onSpeedChange={saveDetectionSpeed}
           onResolutionChange={saveCameraResolution}
           onWarningDelayChange={saveWarningDelay}
+          onAutoDismissDelayChange={saveAutoDismissDelay}
         />
       )}
 

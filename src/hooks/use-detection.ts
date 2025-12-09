@@ -223,6 +223,10 @@ export function useDetection({
   useEffect(() => {
     const unlisten = listen<boolean>("warning-state", (event) => {
       if (!event.payload) {
+        fingerInMouthStartRef.current = null;
+        warningShownRef.current = false;
+
+        setDetectionElapsed(0);
         startCamera();
       }
     });
@@ -230,7 +234,7 @@ export function useDetection({
     return () => {
       unlisten.then((fn) => fn());
     };
-  }, [startCamera]);
+  }, [startCamera, setDetectionElapsed]);
 
   return {
     startCamera,
