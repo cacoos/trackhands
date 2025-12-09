@@ -29,6 +29,8 @@ export function useDetection({
 
   const { setHandInMouth, setMouthRect, setFingerPositions, setDetectionElapsed } = useAppStore();
 
+  const screenshotTakenRef = useRef<boolean>(false);
+
   const captureScreenshot = useCallback(() => {
     if (!videoRef.current || !canvasRef.current) return null;
 
@@ -46,25 +48,10 @@ export function useDetection({
   }, [videoRef, canvasRef]);
 
   const handleWarning = useCallback(
-    async ({
-      isInMouth,
-      now,
-      wasInMouth,
-    }: {
-      isInMouth: boolean;
-      now: number;
-      wasInMouth: boolean;
-    }) => {
+    async ({ isInMouth, now }: { isInMouth: boolean; now: number }) => {
       if (isInMouth) {
         if (!fingerInMouthStartRef.current) {
           fingerInMouthStartRef.current = now;
-        }
-
-        if (!wasInMouth) {
-          const screenshot = captureScreenshot();
-          if (screenshot) {
-            localStorage.setItem(STORAGE_KEYS.DETECTION_IMAGE, screenshot);
-          }
         }
 
         const timeInMouth = now - fingerInMouthStartRef.current;
@@ -72,6 +59,15 @@ export function useDetection({
 
         // Update elapsed time in store
         setDetectionElapsed(timeInMouth);
+
+        const screenshotTime = warningDelayMs / 2;
+        if (timeInMouth >= screenshotTime && !screenshotTakenRef.current) {
+          screenshotTakenRef.current = true;
+          const screenshot = captureScreenshot();
+          if (screenshot) {
+            localStorage.setItem(STORAGE_KEYS.DETECTION_IMAGE, screenshot);
+          }
+        }
 
         if (timeInMouth >= warningDelayMs && !warningShownRef.current) {
           warningShownRef.current = true;
@@ -85,6 +81,8 @@ export function useDetection({
       } else {
         fingerInMouthStartRef.current = null;
         warningShownRef.current = false;
+        screenshotTakenRef.current = false;
+
         setDetectionElapsed(0);
       }
     },
@@ -125,6 +123,7 @@ export function useDetection({
 
         fingerInMouthStartRef.current = null;
         warningShownRef.current = false;
+        screenshotTakenRef.current = false;
 
         return;
       }
@@ -140,7 +139,7 @@ export function useDetection({
       const wasInMouth = useAppStore.getState().handInMouth;
       const isInMouth = isFingerInMouth({ fingers, mouth: mouthRect });
 
-      await handleWarning({ isInMouth, now, wasInMouth });
+      await handleWarning({ isInMouth, now });
 
       if (wasInMouth !== isInMouth) {
         setHandInMouth(isInMouth);
@@ -221,20 +220,24 @@ export function useDetection({
   }, [isCameraActive, startCamera, startDetection]);
 
   useEffect(() => {
-    const unlisten = listen<boolean>("warning-state", (event) => {
+    const unlisten = listen<boolean>("warning-state", async (event) => {
       if (!event.payload) {
         fingerInMouthStartRef.current = null;
         warningShownRef.current = false;
+        screenshotTakenRef.current = false;
 
         setDetectionElapsed(0);
-        startCamera();
+
+        stopDetection();
+        await startCamera();
+        startDetection();
       }
     });
 
     return () => {
       unlisten.then((fn) => fn());
     };
-  }, [startCamera, setDetectionElapsed]);
+  }, [startCamera, setDetectionElapsed, stopDetection, startDetection]);
 
   return {
     startCamera,
