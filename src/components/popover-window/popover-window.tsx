@@ -28,8 +28,8 @@ export function PopoverWindow() {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-3 bg-surface">
-      <div className="flex-1 min-h-0 rounded-xl overflow-hidden">
+    <div className="flex flex-col h-full p-2 gap-2 bg-surface rounded-2xl overflow-hidden">
+      <div className="flex-1 min-h-0 rounded-lg overflow-hidden">
         <Camera />
       </div>
 
@@ -46,7 +46,7 @@ export function PopoverWindow() {
         />
       )}
 
-      <div className="flex justify-between gap-3 px-3 py-2 bg-white/5 rounded-[10px] backdrop-blur-[10px]">
+      <div className="flex justify-between p-1.5 bg-white/5 rounded-lg backdrop-blur-[10px]">
         <SettingsButton active={showSettings} onClick={() => setShowSettings(!showSettings)} />
         <WindowControls onMinimize={handleMinimize} onTerminate={handleTerminate} />
       </div>

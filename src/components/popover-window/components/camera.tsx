@@ -143,7 +143,7 @@ export function Camera() {
   }, [mouthRect, fingerPositions]);
 
   return (
-    <div className="relative w-full h-full rounded-xl overflow-hidden bg-surface-alt shadow-app">
+    <div className="relative w-full h-full overflow-hidden bg-surface-alt shadow-app">
       <video
         ref={videoRef}
         autoPlay
@@ -163,7 +163,7 @@ export function Camera() {
             ? detectionElapsed >= warningDelay
               ? "bg-red-500/80 text-white"
               : "bg-yellow-500/80 text-black"
-            : "bg-black/50 text-white/70"
+            : "bg-black/40 text-white/70"
         }`}
       >
         <span className="relative flex h-1.5 w-1.5">
@@ -179,7 +179,7 @@ export function Camera() {
               handInMouth
                 ? detectionElapsed >= warningDelay
                   ? "bg-white"
-                  : "bg-black"
+                  : "bg-yellow-300"
                 : "bg-emerald-400"
             }`}
           />

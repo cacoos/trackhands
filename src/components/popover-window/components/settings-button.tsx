@@ -6,7 +6,7 @@ interface SettingsButtonProps {
 export function SettingsButton({ active, onClick }: SettingsButtonProps) {
   return (
     <button
-      className={`flex items-center justify-center w-9 h-9 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] ${
+      className={`flex items-center justify-center w-9 h-9 rounded-md bg-white/[0.08] hover:bg-white/[0.15] ${
         active ? "text-white" : "text-white/70 hover:text-white"
       }`}
       onClick={onClick}

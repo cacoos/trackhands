@@ -22,12 +22,12 @@ export function Settings({
   onAutoDismissDelayChange,
 }: SettingsProps) {
   return (
-    <div className="flex flex-col gap-3 p-3 bg-surface-alt rounded-xl">
+    <div className="flex flex-col gap-2 p-2 bg-surface-alt rounded-lg">
       <div className="flex items-center justify-between gap-2">
         <label className="text-xs text-muted">Detection</label>
-        <div className="flex gap-1 p-1 bg-surface-elevated rounded-lg w-[140px]">
+        <div className="flex gap-1 p-1 bg-surface-elevated rounded-md w-[140px]">
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               detectionSpeed === "slow"
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -37,7 +37,7 @@ export function Settings({
             Slow
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               detectionSpeed === "medium"
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -47,7 +47,7 @@ export function Settings({
             Med
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               detectionSpeed === "fast"
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -61,9 +61,9 @@ export function Settings({
 
       <div className="flex items-center justify-between gap-2">
         <label className="text-xs text-muted">Resolution</label>
-        <div className="flex gap-1 p-1 bg-surface-elevated rounded-lg w-[140px]">
+        <div className="flex gap-1 p-1 bg-surface-elevated rounded-md w-[140px]">
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               cameraResolution === "low"
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -73,7 +73,7 @@ export function Settings({
             Low
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               cameraResolution === "medium"
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -83,7 +83,7 @@ export function Settings({
             Med
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               cameraResolution === "high"
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -117,9 +117,9 @@ export function Settings({
             How long fingers must be near mouth to trigger
           </span>
         </label>
-        <div className="flex gap-1 p-1 bg-surface-elevated rounded-lg w-[140px]">
+        <div className="flex gap-1 p-1 bg-surface-elevated rounded-md w-[140px]">
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               warningDelay === 1000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -129,7 +129,7 @@ export function Settings({
             1s
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               warningDelay === 2000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -139,7 +139,7 @@ export function Settings({
             2s
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               warningDelay === 3000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -149,7 +149,7 @@ export function Settings({
             3s
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               warningDelay === 5000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -183,9 +183,9 @@ export function Settings({
             How long before warning auto-dismisses
           </span>
         </label>
-        <div className="flex gap-1 p-1 bg-surface-elevated rounded-lg w-[140px]">
+        <div className="flex gap-1 p-1 bg-surface-elevated rounded-md w-[140px]">
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               autoDismissDelay === 1000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -195,7 +195,7 @@ export function Settings({
             1s
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               autoDismissDelay === 2000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -205,7 +205,7 @@ export function Settings({
             2s
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               autoDismissDelay === 3000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
@@ -215,7 +215,7 @@ export function Settings({
             3s
           </button>
           <button
-            className={`flex-1 py-1 rounded text-[11px] font-medium ${
+            className={`flex-1 py-1 rounded text-[10px] font-medium ${
               autoDismissDelay === 5000
                 ? "bg-surface text-foreground shadow-sm"
                 : "text-muted hover:text-foreground"
