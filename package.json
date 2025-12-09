@@ -1,6 +1,6 @@
 {
   "name": "trackhands",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Detects when your fingers are near your mouth and reminds you to stop",
   "type": "module",
   "license": "MIT",
