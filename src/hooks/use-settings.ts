@@ -7,9 +7,11 @@ export function useSettings() {
     detectionSpeed,
     cameraResolution,
     warningDelay,
+    autoDismissDelay,
     setDetectionSpeed,
     setCameraResolution,
     setWarningDelay,
+    setAutoDismissDelay,
   } = useAppStore();
   const storeRef = useRef<Store | null>(null);
 
@@ -22,6 +24,7 @@ export function useSettings() {
         const savedSpeed = await store.get<DetectionSpeed>("detectionSpeed");
         const savedResolution = await store.get<"low" | "medium" | "high">("cameraResolution");
         const savedWarningDelay = await store.get<number>("warningDelay");
+        const savedAutoDismissDelay = await store.get<number>("autoDismissDelay");
 
         if (savedSpeed) {
           setDetectionSpeed(savedSpeed);
@@ -34,13 +37,17 @@ export function useSettings() {
         if (savedWarningDelay !== undefined && savedWarningDelay !== null) {
           setWarningDelay(savedWarningDelay);
         }
+
+        if (savedAutoDismissDelay !== undefined && savedAutoDismissDelay !== null) {
+          setAutoDismissDelay(savedAutoDismissDelay);
+        }
       } catch (error) {
         console.error("Failed to load settings:", error);
       }
     };
 
     loadSettings();
-  }, [setDetectionSpeed, setCameraResolution, setWarningDelay]);
+  }, [setDetectionSpeed, setCameraResolution, setWarningDelay, setAutoDismissDelay]);
 
   const saveDetectionSpeed = async (speed: DetectionSpeed) => {
     setDetectionSpeed(speed);
@@ -66,12 +73,22 @@ export function useSettings() {
     }
   };
 
+  const saveAutoDismissDelay = async (delay: number) => {
+    setAutoDismissDelay(delay);
+    if (storeRef.current) {
+      await storeRef.current.set("autoDismissDelay", delay);
+      await storeRef.current.save();
+    }
+  };
+
   return {
     detectionSpeed,
     cameraResolution,
     warningDelay,
+    autoDismissDelay,
     saveDetectionSpeed,
     saveCameraResolution,
     saveWarningDelay,
+    saveAutoDismissDelay,
   };
 }
