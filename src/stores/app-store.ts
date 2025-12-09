@@ -27,6 +27,7 @@ interface AppState {
   detectionSpeed: DetectionSpeed;
   cameraResolution: "low" | "medium" | "high";
   warningDelay: number; // in milliseconds
+  autoDismissDelay: number; // in milliseconds
   detectionElapsed: number; // ms since detection started
   setHandInMouth: (value: boolean) => void;
   setMouthRect: (rect: Rect | null) => void;
@@ -34,6 +35,7 @@ interface AppState {
   setDetectionSpeed: (speed: DetectionSpeed) => void;
   setCameraResolution: (resolution: "low" | "medium" | "high") => void;
   setWarningDelay: (delay: number) => void;
+  setAutoDismissDelay: (delay: number) => void;
   setDetectionElapsed: (elapsed: number) => void;
 }
 
@@ -44,6 +46,7 @@ export const useAppStore = create<AppState>((set) => ({
   detectionSpeed: "medium",
   cameraResolution: "medium",
   warningDelay: 2000,
+  autoDismissDelay: 2000,
   detectionElapsed: 0,
   setHandInMouth: (value) => set({ handInMouth: value }),
   setMouthRect: (rect) => set({ mouthRect: rect }),
@@ -51,6 +54,7 @@ export const useAppStore = create<AppState>((set) => ({
   setDetectionSpeed: (speed) => set({ detectionSpeed: speed }),
   setCameraResolution: (resolution) => set({ cameraResolution: resolution }),
   setWarningDelay: (delay) => set({ warningDelay: delay }),
+  setAutoDismissDelay: (delay) => set({ autoDismissDelay: delay }),
   setDetectionElapsed: (elapsed) => set({ detectionElapsed: elapsed }),
 }));
 
