@@ -71,12 +71,7 @@ export function useDetection({
 
         if (timeInMouth >= warningDelayMs && !warningShownRef.current) {
           warningShownRef.current = true;
-
-          const isPopoverVisible = await invoke<boolean>("is_popover_visible").catch(() => false);
-
-          if (!isPopoverVisible) {
-            invoke("show_warning").catch(console.error);
-          }
+          invoke("show_warning").catch(console.error);
         }
       } else {
         fingerInMouthStartRef.current = null;

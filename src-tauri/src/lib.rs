@@ -6,8 +6,6 @@ use tauri::{
 };
 use std::sync::Mutex;
 
-const MIN_VISIBLE_WIDTH: u32 = 50;
-
 const POPOVER_WIDTH: f64 = 320.0;
 const POPOVER_HEIGHT: f64 = 380.0;
 const TRAY_MARGIN_Y: f64 = 5.0;
@@ -24,18 +22,34 @@ struct TrayIconPosition {
 }
 
 static TRAY_POSITION: Mutex<Option<TrayIconPosition>> = Mutex::new(None);
+static WARNING_VISIBLE: Mutex<bool> = Mutex::new(false);
+static POPOVER_VISIBLE: Mutex<bool> = Mutex::new(false);
 
 #[tauri::command]
 fn show_warning(app: AppHandle) {
+    if let Ok(mut guard) = WARNING_VISIBLE.lock() {
+        *guard = true;
+    }
+    
     if let Some(warning) = app.get_webview_window("warning") {
         let _ = warning.show();
-        let _ = warning.set_focus();
     }
+    
+    if POPOVER_VISIBLE.lock().map(|g| *g).unwrap_or(false) {
+        if let Some(popover) = app.get_webview_window("popover") {
+            let _ = popover.set_focus();
+        }
+    }
+    
     let _ = app.emit("warning-state", true);
 }
 
 #[tauri::command]
 fn hide_warning(app: AppHandle) {
+    if let Ok(mut guard) = WARNING_VISIBLE.lock() {
+        *guard = false;
+    }
+    
     if let Some(warning) = app.get_webview_window("warning") {
         let _ = warning.hide();
     }
@@ -47,25 +61,23 @@ fn quit_app(app: AppHandle) {
     app.exit(0);
 }
 
-#[tauri::command]
-fn is_popover_visible(app: AppHandle) -> bool {
-    if let Some(window) = app.get_webview_window("popover") {
-        let size = window.inner_size().unwrap_or(tauri::PhysicalSize::new(1, 1));
-        size.width > MIN_VISIBLE_WIDTH
-    } else {
-        false
+fn hide_popover(app: &AppHandle) {
+    if let Ok(mut guard) = POPOVER_VISIBLE.lock() {
+        *guard = false;
     }
-}
-
-#[tauri::command]
-fn minimize_popover(app: AppHandle) {
+    
     if let Some(window) = app.get_webview_window("popover") {
         let _ = window.set_size(tauri::LogicalSize::new(1.0, 1.0));
         let _ = window.set_position(tauri::LogicalPosition::new(0.0, 0.0));
     }
 }
 
-fn show_popover(app: &AppHandle) {
+#[tauri::command]
+fn minimize_popover(app: AppHandle) {
+    hide_popover(&app);
+}
+
+fn toggle_popover(app: &AppHandle) {
     #[cfg(target_os = "macos")]
     if let Some(mtm) = MainThreadMarker::new() {
         let ns_app = NSApplication::sharedApplication(mtm);
@@ -74,15 +86,16 @@ fn show_popover(app: &AppHandle) {
         }
     }
     
-    if let Some(window) = app.get_webview_window("popover") {
-        let size = window.inner_size().unwrap_or(tauri::PhysicalSize::new(1, 1));
-        let is_visible = size.width > MIN_VISIBLE_WIDTH;
+    let is_visible = POPOVER_VISIBLE.lock().map(|g| *g).unwrap_or(false);
+    
+    if is_visible {
+        hide_popover(app);
+    } else {
+        if let Ok(mut guard) = POPOVER_VISIBLE.lock() {
+            *guard = true;
+        }
         
-        if is_visible {
-            // Hide the popover
-            let _ = window.set_size(tauri::LogicalSize::new(1.0, 1.0));
-            let _ = window.set_position(tauri::LogicalPosition::new(0.0, 0.0));
-        } else {
+        if let Some(window) = app.get_webview_window("popover") {
             let _ = window.set_size(tauri::LogicalSize::new(POPOVER_WIDTH, POPOVER_HEIGHT));
             
             let scale = window.scale_factor().unwrap_or(2.0);
@@ -134,7 +147,7 @@ pub fn run() {
                 .on_menu_event(|app, event| {
                     match event.id.as_ref() {
                         "toggle_preview" => {
-                            show_popover(app);
+                            toggle_popover(app);
                         }
                         "quit" => {
                             app.exit(0);
@@ -160,7 +173,7 @@ pub fn run() {
                                 width: size.width,
                             });
                         }
-                        show_popover(tray.app_handle());
+                        toggle_popover(tray.app_handle());
                     }
                 })
                 .build(app)?;
@@ -173,21 +186,23 @@ pub fn run() {
                 .transparent(true)
                 .shadow(false)
                 .position(0.0, 0.0)
+                .always_on_top(true)
                 .build()?;
 
-            let popover_clone = popover.clone();
+            let app_handle = app.handle().clone();
             popover.on_window_event(move |event| {
                 match event {
                     WindowEvent::CloseRequested { api, .. } => {
                         api.prevent_close();
-                        let _ = popover_clone.set_size(tauri::LogicalSize::new(1.0, 1.0));
-                        let _ = popover_clone.set_position(tauri::LogicalPosition::new(0.0, 0.0));
+                        hide_popover(&app_handle);
                     }
                     WindowEvent::Focused(false) => {
-                        let size = popover_clone.inner_size().unwrap_or(tauri::PhysicalSize::new(1, 1));
-                        if size.width > MIN_VISIBLE_WIDTH {
-                            let _ = popover_clone.set_size(tauri::LogicalSize::new(1.0, 1.0));
-                            let _ = popover_clone.set_position(tauri::LogicalPosition::new(0.0, 0.0));
+                        if WARNING_VISIBLE.lock().map(|g| *g).unwrap_or(false) {
+                            return;
+                        }
+
+                        if POPOVER_VISIBLE.lock().map(|g| *g).unwrap_or(false) {
+                            hide_popover(&app_handle);
                         }
                     }
                     _ => {}
@@ -222,7 +237,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![show_warning, hide_warning, quit_app, minimize_popover, is_popover_visible])
+        .invoke_handler(tauri::generate_handler![show_warning, hide_warning, quit_app, minimize_popover])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
