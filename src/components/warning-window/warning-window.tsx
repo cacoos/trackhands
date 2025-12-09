@@ -75,7 +75,7 @@ export function WarningWindow() {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/90 z-[9999] select-none">
+    <div className="fixed inset-0 flex items-center justify-center bg-surface z-[9999] select-none">
       <div className="flex flex-col items-center gap-2 text-center p-10">
         <h1 className="text-[64px] font-extrabold text-white m-0 tracking-[-2px]">Hands down!</h1>
         <p className="text-2xl font-normal text-white/70 m-0">
