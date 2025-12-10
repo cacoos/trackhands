@@ -1,26 +1,14 @@
-import { useDetection } from "@/hooks/use-detection";
-import { useAppStore } from "@/stores/app-store";
-import { useEffect, useMemo, useRef } from "react";
+import { OverlayCanvas } from "@/components/popover-window/components/camera/components/overlay-canvas";
+import { useEffect, useRef } from "react";
 import { StatusBadge } from "./components/status-badge";
-import { useDrawOverlay } from "./hooks/use-draw-overlay";
 
-export function Camera() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+interface CameraProps {
+  videoRef: React.RefObject<HTMLVideoElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
+}
+
+export function Camera({ videoRef, canvasRef }: CameraProps) {
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
-
-  const { mouthRect, handInMouth, warningDelay, detectionElapsed } = useAppStore();
-
-  const status = useMemo(() => {
-    if (!mouthRect) return "off";
-    if (!handInMouth) return "clear";
-    if (detectionElapsed >= warningDelay) return "alert";
-
-    return "warning";
-  }, [mouthRect, handInMouth, warningDelay, detectionElapsed]);
-
-  useDetection({ videoRef, canvasRef });
-  useDrawOverlay({ videoRef, overlayCanvasRef });
 
   useEffect(() => {
     const video = videoRef.current;
@@ -46,7 +34,7 @@ export function Camera() {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, []);
+  }, [videoRef]);
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-surface-alt shadow-app">
@@ -57,20 +45,12 @@ export function Camera() {
         muted
         className="w-full h-full object-cover -scale-x-100"
       />
-      <canvas ref={canvasRef} className="hidden" />
-      <canvas
-        ref={overlayCanvasRef}
-        className="absolute top-0 left-0 w-full h-full pointer-events-none -scale-x-100"
-      />
 
-      <StatusBadge
-        status={status}
-        countdown={
-          handInMouth && detectionElapsed < warningDelay
-            ? (warningDelay - detectionElapsed) / 1000
-            : null
-        }
-      />
+      <canvas ref={canvasRef} className="hidden" />
+
+      <OverlayCanvas videoRef={videoRef} overlayCanvasRef={overlayCanvasRef} />
+
+      <StatusBadge />
     </div>
   );
 }

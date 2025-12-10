@@ -1,6 +1,7 @@
 import { useAppStore, type DetectionSpeed } from "@/stores/app-store";
 import { load, type Store } from "@tauri-apps/plugin-store";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useShallow } from "zustand/shallow";
 
 export function useSettings() {
   const {
@@ -12,7 +13,19 @@ export function useSettings() {
     setCameraResolution,
     setWarningDelay,
     setAutoDismissDelay,
-  } = useAppStore();
+  } = useAppStore(
+    useShallow((state) => ({
+      detectionSpeed: state.detectionSpeed,
+      cameraResolution: state.cameraResolution,
+      warningDelay: state.warningDelay,
+      autoDismissDelay: state.autoDismissDelay,
+      setDetectionSpeed: state.setDetectionSpeed,
+      setCameraResolution: state.setCameraResolution,
+      setWarningDelay: state.setWarningDelay,
+      setAutoDismissDelay: state.setAutoDismissDelay,
+    }))
+  );
+
   const storeRef = useRef<Store | null>(null);
 
   useEffect(() => {
@@ -49,37 +62,53 @@ export function useSettings() {
     loadSettings();
   }, [setDetectionSpeed, setCameraResolution, setWarningDelay, setAutoDismissDelay]);
 
-  const saveDetectionSpeed = async (speed: DetectionSpeed) => {
-    setDetectionSpeed(speed);
-    if (storeRef.current) {
-      await storeRef.current.set("detectionSpeed", speed);
-      await storeRef.current.save();
-    }
-  };
+  const saveDetectionSpeed = useCallback(
+    async (speed: DetectionSpeed) => {
+      setDetectionSpeed(speed);
 
-  const saveCameraResolution = async (resolution: "low" | "medium" | "high") => {
-    setCameraResolution(resolution);
-    if (storeRef.current) {
-      await storeRef.current.set("cameraResolution", resolution);
-      await storeRef.current.save();
-    }
-  };
+      if (storeRef.current) {
+        await storeRef.current.set("detectionSpeed", speed);
+        await storeRef.current.save();
+      }
+    },
+    [setDetectionSpeed]
+  );
 
-  const saveWarningDelay = async (delay: number) => {
-    setWarningDelay(delay);
-    if (storeRef.current) {
-      await storeRef.current.set("warningDelay", delay);
-      await storeRef.current.save();
-    }
-  };
+  const saveCameraResolution = useCallback(
+    async (resolution: "low" | "medium" | "high") => {
+      setCameraResolution(resolution);
 
-  const saveAutoDismissDelay = async (delay: number) => {
-    setAutoDismissDelay(delay);
-    if (storeRef.current) {
-      await storeRef.current.set("autoDismissDelay", delay);
-      await storeRef.current.save();
-    }
-  };
+      if (storeRef.current) {
+        await storeRef.current.set("cameraResolution", resolution);
+        await storeRef.current.save();
+      }
+    },
+    [setCameraResolution]
+  );
+
+  const saveWarningDelay = useCallback(
+    async (delay: number) => {
+      setWarningDelay(delay);
+
+      if (storeRef.current) {
+        await storeRef.current.set("warningDelay", delay);
+        await storeRef.current.save();
+      }
+    },
+    [setWarningDelay]
+  );
+
+  const saveAutoDismissDelay = useCallback(
+    async (delay: number) => {
+      setAutoDismissDelay(delay);
+
+      if (storeRef.current) {
+        await storeRef.current.set("autoDismissDelay", delay);
+        await storeRef.current.save();
+      }
+    },
+    [setAutoDismissDelay]
+  );
 
   return {
     detectionSpeed,
