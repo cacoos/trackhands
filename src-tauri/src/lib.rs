@@ -36,9 +36,15 @@ fn show_warning(app: AppHandle) {
         let _ = warning.show();
     }
 
-    if POPOVER_VISIBLE.lock().map(|g| *g).unwrap_or(false) {
+    let popover_visible = POPOVER_VISIBLE.lock().map(|g| *g).unwrap_or(false);
+
+    if popover_visible {
         if let Some(popover) = app.get_webview_window("popover") {
             let _ = popover.set_focus();
+        }
+    } else {
+        if let Some(warning) = app.get_webview_window("warning") {
+            let _ = warning.set_focus();
         }
     }
 
