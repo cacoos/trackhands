@@ -5,24 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1] - 2024-12-09
+## [1.0.2] - 2025-12-09
 
 ### Added
 
-- Auto-dismiss warning feature with animated progress ring
-- Auto-dismiss delay setting controls in settings panel
+- Color dot indicator on menubar to show detection status ([#6](https://github.com/cacoos/trackhands/pull/6))
 
 ### Changed
 
-- Improved popover window positioning for macOS menu bar
-- Refined popover window border radius for better visual consistency
+- Refactored camera component with overlay and status badge for better separation of concerns ([#6](https://github.com/cacoos/trackhands/pull/6))
+- Improved performance by reducing unnecessary re-renders with useShallow and component isolation ([#7](https://github.com/cacoos/trackhands/pull/7))
 
 ### Fixed
 
-- Detection now uses consistent mouth rectangle across all resolutions
-- Detection state properly resets when warning is dismissed
+- Popover visibility tracking with proper state management ([#5](https://github.com/cacoos/trackhands/pull/5))
 
-## [1.0.0] - 2024-12-08
+## [1.0.1] - 2025-12-08
+
+### Added
+
+- Auto-dismiss warning feature with animated progress ring ([#1](https://github.com/cacoos/trackhands/pull/1))
+- Auto-dismiss delay setting controls in settings panel ([#1](https://github.com/cacoos/trackhands/pull/1))
+
+### Changed
+
+- Improved popover window positioning for macOS menu bar ([#2](https://github.com/cacoos/trackhands/pull/2))
+- Refined popover window border radius for better visual consistency ([#2](https://github.com/cacoos/trackhands/pull/2))
+
+### Fixed
+
+- Detection now uses consistent mouth rectangle across all resolutions ([#3](https://github.com/cacoos/trackhands/pull/3))
+- Detection state properly resets when warning is dismissed ([#1](https://github.com/cacoos/trackhands/pull/1))
+- Popover focus handling and screenshot timing ([#4](https://github.com/cacoos/trackhands/pull/4))
+
+## [1.0.0] - 2025-12-07
 
 ### Added
 
