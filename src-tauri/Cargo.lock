@@ -4695,7 +4695,7 @@ dependencies = [
 
 [[package]]
 name = "trackhands"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "image",
  "objc2 0.6.3",
