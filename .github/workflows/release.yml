@@ -80,6 +80,15 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Get version number
+        id: version
+        shell: bash
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION_NUM="${VERSION#v}"
+          echo "number=$VERSION_NUM" >> $GITHUB_OUTPUT
+          echo "tag=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
@@ -97,8 +106,8 @@ jobs:
             ## Downloads
 
             ### 🍎 macOS
-            - **Apple Silicon (M1/M2/M3)**: `TrackHands_x.x.x_aarch64.dmg`
-            - **Intel**: `TrackHands_x.x.x_x64.dmg`
+            - [**Apple Silicon (M1/M2/M3)**](https://github.com/cacoos/trackhands/releases/download/${{ steps.version.outputs.tag }}/TrackHands_${{ steps.version.outputs.number }}_aarch64.dmg)
+            - [**Intel**](https://github.com/cacoos/trackhands/releases/download/${{ steps.version.outputs.tag }}/TrackHands_${{ steps.version.outputs.number }}_x64.dmg)
 
             > ⚠️ If you see "app is damaged" error, run:
             > ```bash
@@ -106,13 +115,13 @@ jobs:
             > ```
 
             ### 🪟 Windows
-            - **Installer**: `TrackHands_x.x.x_x64-setup.exe`
-            - **MSI**: `TrackHands_x.x.x_x64_en-US.msi`
+            - [**Installer (.exe)**](https://github.com/cacoos/trackhands/releases/download/${{ steps.version.outputs.tag }}/TrackHands_${{ steps.version.outputs.number }}_x64-setup.exe)
+            - [**MSI**](https://github.com/cacoos/trackhands/releases/download/${{ steps.version.outputs.tag }}/TrackHands_${{ steps.version.outputs.number }}_x64_en-US.msi)
 
             ### 🐧 Linux
-            - **Debian/Ubuntu**: `TrackHands_x.x.x_amd64.deb`
-            - **Fedora/RHEL**: `TrackHands-x.x.x-1.x86_64.rpm`
-            - **AppImage**: `TrackHands_x.x.x_amd64.AppImage`
+            - [**Debian/Ubuntu (.deb)**](https://github.com/cacoos/trackhands/releases/download/${{ steps.version.outputs.tag }}/TrackHands_${{ steps.version.outputs.number }}_amd64.deb)
+            - [**Fedora/RHEL (.rpm)**](https://github.com/cacoos/trackhands/releases/download/${{ steps.version.outputs.tag }}/TrackHands-${{ steps.version.outputs.number }}-1.x86_64.rpm)
+            - [**AppImage**](https://github.com/cacoos/trackhands/releases/download/${{ steps.version.outputs.tag }}/TrackHands_${{ steps.version.outputs.number }}_amd64.AppImage)
 
             ---
             See the [README](https://github.com/cacoos/trackhands#readme) for more details.
