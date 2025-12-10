@@ -1,4 +1,4 @@
-import { Camera } from "@/components/popover-window/components/camera";
+import { Camera } from "@/components/popover-window/components/camera/camera";
 import { Settings } from "@/components/popover-window/components/settings";
 import { SettingsButton } from "@/components/popover-window/components/settings-button";
 import { WindowControls } from "@/components/popover-window/components/window-controls";

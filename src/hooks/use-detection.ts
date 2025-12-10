@@ -2,6 +2,7 @@ import { useCamera } from "@/hooks/use-camera";
 import { useMediaPipe } from "@/hooks/use-mediapipe";
 import { getFingerPositions, getMouthRect, isFingerInMouth } from "@/lib/detection/geometry";
 import { STORAGE_KEYS } from "@/lib/storage-keys";
+import { setTrayStatus } from "@/lib/tray-status";
 import { detectionIntervals, useAppStore } from "@/stores/app-store";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
@@ -57,7 +58,6 @@ export function useDetection({
         const timeInMouth = now - fingerInMouthStartRef.current;
         const warningDelayMs = useAppStore.getState().warningDelay;
 
-        // Update elapsed time in store
         setDetectionElapsed(timeInMouth);
 
         const screenshotTime = warningDelayMs / 2;
@@ -69,16 +69,24 @@ export function useDetection({
           }
         }
 
-        if (timeInMouth >= warningDelayMs && !warningShownRef.current) {
-          warningShownRef.current = true;
-          invoke("show_warning").catch(console.error);
+        if (timeInMouth >= warningDelayMs) {
+          setTrayStatus("alert");
+
+          if (!warningShownRef.current) {
+            warningShownRef.current = true;
+
+            invoke("show_warning").catch(console.error);
+          }
+        } else {
+          setTrayStatus("warning");
         }
       } else {
         fingerInMouthStartRef.current = null;
         warningShownRef.current = false;
         screenshotTakenRef.current = false;
-
         setDetectionElapsed(0);
+
+        setTrayStatus("clear");
       }
     },
     [captureScreenshot, setDetectionElapsed]
@@ -99,6 +107,7 @@ export function useDetection({
       const faceResults = detectFace({ video, timestamp: now });
       if (!faceResults?.faceLandmarks?.length) {
         setMouthRect(null);
+        setTrayStatus("off");
 
         return;
       }
@@ -115,6 +124,8 @@ export function useDetection({
       if (!handResults?.landmarks?.length) {
         setFingerPositions([]);
         setHandInMouth(false);
+
+        setTrayStatus("clear");
 
         fingerInMouthStartRef.current = null;
         warningShownRef.current = false;
