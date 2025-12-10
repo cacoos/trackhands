@@ -7,6 +7,7 @@ import { detectionIntervals, useAppStore } from "@/stores/app-store";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useRef } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export function useDetection({
   videoRef,
@@ -28,7 +29,14 @@ export function useDetection({
   } = useMediaPipe();
   const { start: startCamera, stop: stopCamera, isActive: isCameraActive } = useCamera(videoRef);
 
-  const { setHandInMouth, setMouthRect, setFingerPositions, setDetectionElapsed } = useAppStore();
+  const { setHandInMouth, setMouthRect, setFingerPositions, setDetectionElapsed } = useAppStore(
+    useShallow((state) => ({
+      setHandInMouth: state.setHandInMouth,
+      setMouthRect: state.setMouthRect,
+      setFingerPositions: state.setFingerPositions,
+      setDetectionElapsed: state.setDetectionElapsed,
+    }))
+  );
 
   const screenshotTakenRef = useRef<boolean>(false);
 

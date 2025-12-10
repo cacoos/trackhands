@@ -1,4 +1,7 @@
 import { statusStyles, TrayStatus } from "@/lib/tray-status";
+import { useAppStore } from "@/stores/app-store";
+import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 const statusLabels: Record<TrayStatus, string> = {
   off: "No face",
@@ -7,7 +10,29 @@ const statusLabels: Record<TrayStatus, string> = {
   alert: "Triggered!",
 };
 
-export function StatusBadge({ status, countdown }: { status: TrayStatus; countdown: number | null }) {
+export function StatusBadge() {
+  const { noFaceVisible, handInMouth, warningDelay, detectionElapsed } = useAppStore(
+    useShallow((state) => ({
+      noFaceVisible: state.mouthRect == null,
+      handInMouth: state.handInMouth,
+      warningDelay: state.warningDelay,
+      detectionElapsed: state.detectionElapsed,
+    }))
+  );
+
+  const countdown =
+    handInMouth && detectionElapsed < warningDelay
+      ? (warningDelay - detectionElapsed) / 1000
+      : null;
+
+  const status = useMemo(() => {
+    if (noFaceVisible) return "off";
+    if (!handInMouth) return "clear";
+    if (detectionElapsed >= warningDelay) return "alert";
+
+    return "warning";
+  }, [noFaceVisible, handInMouth, warningDelay, detectionElapsed]);
+
   const styles = statusStyles[status];
   const showPing = status === "warning" || status === "alert";
 
@@ -23,6 +48,7 @@ export function StatusBadge({ status, countdown }: { status: TrayStatus; countdo
         )}
         <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${styles.dot}`} />
       </span>
+
       {countdown !== null ? (
         <span className="tabular-nums">{countdown.toFixed(1)}s</span>
       ) : (
@@ -31,4 +57,3 @@ export function StatusBadge({ status, countdown }: { status: TrayStatus; countdo
     </div>
   );
 }
-
