@@ -4,35 +4,13 @@
 
 TrackHands is a cross-platform desktop app that detects when your fingers are near your mouth and reminds you to stop.
 
-## Features
-
-- Real-time hand and face detection using MediaPipe
-- Unobtrusive system tray app
-- Warning overlay when hands are detected near mouth
-- Camera preview with detection visualization
-- Adjustable detection frequency
-- Configurable camera resolution
-- Screenshot capture of detected incidents
-- Privacy-focused — all processing done locally
-
-## Requirements
-
-- macOS 11+, Windows 10+, or Linux
-- Built-in camera or compatible webcam
-- Camera permissions enabled
-
-### Development Requirements
-
-- [Node.js](https://nodejs.org/) 18+
-- [pnpm](https://pnpm.io/) (recommended) or npm
-- [Rust](https://www.rust-lang.org/tools/install) (latest stable)
-- [Tauri CLI](https://tauri.app/v1/guides/getting-started/prerequisites)
+[![Latest Release](https://img.shields.io/github/v/release/cacoos/trackhands?label=Download&style=for-the-badge)](https://github.com/cacoos/trackhands/releases/latest)
 
 ## Installation
 
 ### From Release
 
-Download the latest release for your platform from the [Releases](https://github.com/cacoos/trackhands/releases) page.
+Download the latest release for your platform from the [Releases](https://github.com/cacoos/trackhands/releases/latest) page.
 
 #### macOS Note
 
@@ -70,6 +48,30 @@ xattr -cr /Applications/TrackHands.app
    ```
 
 The built application will be in `src-tauri/target/release/bundle/`.
+
+## Features
+
+- Real-time hand and face detection using MediaPipe
+- Unobtrusive system tray app
+- Warning overlay when hands are detected near mouth
+- Camera preview with detection visualization
+- Adjustable detection frequency
+- Configurable camera resolution
+- Screenshot capture of detected incidents
+- Privacy-focused — all processing done locally
+
+## Requirements
+
+- macOS 11+, Windows 10+, or Linux
+- Built-in camera or compatible webcam
+- Camera permissions enabled
+
+### Development Requirements
+
+- [Node.js](https://nodejs.org/) 18+
+- [pnpm](https://pnpm.io/) (recommended) or npm
+- [Rust](https://www.rust-lang.org/tools/install) (latest stable)
+- [Tauri CLI](https://tauri.app/v1/guides/getting-started/prerequisites)
 
 ## How It Works
 
