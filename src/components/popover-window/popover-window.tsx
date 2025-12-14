@@ -20,10 +20,6 @@ export function PopoverWindow() {
     saveAutoDismissDelay,
   } = useSettings();
 
-  const handleMinimize = async () => {
-    await invoke("minimize_popover");
-  };
-
   const handleTerminate = async () => {
     await invoke("quit_app");
   };
@@ -49,7 +45,7 @@ export function PopoverWindow() {
 
       <div className="flex justify-between p-1.5 bg-white/5 rounded-lg backdrop-blur-[10px]">
         <SettingsButton active={showSettings} onClick={() => setShowSettings(!showSettings)} />
-        <WindowControls onMinimize={handleMinimize} onTerminate={handleTerminate} />
+        <WindowControls onTerminate={handleTerminate} />
       </div>
     </div>
   );
