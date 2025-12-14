@@ -107,11 +107,15 @@ export function useDetection({
       return;
     }
 
+    const { videoWidth, videoHeight } = video;
+
+    if (!videoWidth || !videoHeight) {
+      return;
+    }
+
     const now = performance.now();
 
     try {
-      const { videoWidth, videoHeight } = video;
-
       const faceResults = detectFace({ video, timestamp: now });
       if (!faceResults?.faceLandmarks?.length) {
         setMouthRect(null);
@@ -222,6 +226,7 @@ export function useDetection({
   useEffect(() => {
     const unsubscribe = useAppStore.subscribe((state, prevState) => {
       if (state.cameraResolution !== prevState.cameraResolution && isCameraActive()) {
+        stopDetection();
         startCamera();
       }
 
@@ -231,7 +236,7 @@ export function useDetection({
     });
 
     return unsubscribe;
-  }, [isCameraActive, startCamera, startDetection]);
+  }, [isCameraActive, startCamera, startDetection, stopDetection]);
 
   useEffect(() => {
     const unlisten = listen<boolean>("warning-state", async (event) => {
