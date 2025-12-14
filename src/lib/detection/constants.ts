@@ -1,6 +1,8 @@
+// All 40 unique landmark indices from MediaPipe's FACEMESH_LIPS specification
+// https://github.com/google-ai-edge/mediapipe/blob/master/mediapipe/python/solutions/face_mesh_connections.py
 export const MOUTH_LANDMARKS = [
-  61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95,
-  78, 61,
+  0, 13, 14, 17, 37, 39, 40, 61, 78, 80, 81, 82, 84, 87, 88, 91, 95, 146, 178, 181, 185, 191, 267,
+  269, 270, 291, 308, 310, 311, 312, 314, 317, 318, 321, 324, 375, 402, 405, 409, 415,
 ];
 
 export const FINGER_TIP_INDICES = [4, 8, 12, 16, 20];
