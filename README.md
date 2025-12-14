@@ -97,14 +97,25 @@ TrackHands runs in your system tray and uses your camera to:
 
 ```
 trackhands/
-├── src/                     # React frontend
+├── src/                     # React frontend (desktop app)
 │   ├── components/          # UI components
 │   ├── hooks/               # Custom hooks (detection)
 │   └── stores/              # State management
 ├── src-tauri/               # Rust backend
 │   ├── src/                 # Tauri commands
 │   └── icons/               # App icons
+├── site/                    # Landing page website
+│   ├── src/components/      # Page sections (hero, features, etc.)
+│   └── src/lib/             # Detection utilities for demo
 └── public/                  # Static assets
+```
+
+### Running the Landing Page
+
+```bash
+cd site
+pnpm install
+pnpm dev
 ```
 
 ## Technology Stack
