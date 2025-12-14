@@ -14,7 +14,9 @@ const TRAY_MARGIN_Y: f64 = 5.0;
 #[cfg(target_os = "macos")]
 use objc2::{msg_send, MainThreadMarker};
 #[cfg(target_os = "macos")]
-use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
+use objc2::rc::Retained;
+#[cfg(target_os = "macos")]
+use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy, NSRunningApplication, NSWorkspace};
 
 struct TrayIconPosition {
     x: f64,
@@ -26,8 +28,21 @@ static TRAY_POSITION: Mutex<Option<TrayIconPosition>> = Mutex::new(None);
 static WARNING_VISIBLE: Mutex<bool> = Mutex::new(false);
 static POPOVER_VISIBLE: Mutex<bool> = Mutex::new(false);
 
+#[cfg(target_os = "macos")]
+static PREVIOUS_APP: Mutex<Option<Retained<NSRunningApplication>>> = Mutex::new(None);
+
 #[tauri::command]
 fn show_warning(app: AppHandle) {
+    #[cfg(target_os = "macos")]
+    {
+        let workspace = NSWorkspace::sharedWorkspace();
+        if let Some(frontmost_app) = workspace.frontmostApplication() {
+            if let Ok(mut guard) = PREVIOUS_APP.lock() {
+                *guard = Some(frontmost_app);
+            }
+        }
+    }
+
     if let Ok(mut guard) = WARNING_VISIBLE.lock() {
         *guard = true;
     }
@@ -61,6 +76,17 @@ fn hide_warning(app: AppHandle) {
         let _ = warning.hide();
     }
     let _ = app.emit("warning-state", false);
+
+    #[cfg(target_os = "macos")]
+    {
+        if let Ok(mut guard) = PREVIOUS_APP.lock() {
+            if let Some(previous_app) = guard.take() {
+                unsafe {
+                    let _: bool = msg_send![&previous_app, activateWithOptions: 0u64];
+                }
+            }
+        }
+    }
 }
 
 #[tauri::command]
