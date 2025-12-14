@@ -79,11 +79,6 @@ fn hide_popover(app: &AppHandle) {
     }
 }
 
-#[tauri::command]
-fn minimize_popover(app: AppHandle) {
-    hide_popover(&app);
-}
-
 fn toggle_popover(app: &AppHandle) {
     #[cfg(target_os = "macos")]
     if let Some(mtm) = MainThreadMarker::new() {
@@ -248,7 +243,6 @@ pub fn run() {
             show_warning,
             hide_warning,
             quit_app,
-            minimize_popover,
             tray::set_tray_status
         ])
         .run(tauri::generate_context!())
