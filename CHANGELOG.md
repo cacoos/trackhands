@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-12-13
+
+### Fixed
+
+- Prevent detection breakage when changing camera resolution ([#19](https://github.com/cacoos/trackhands/pull/19))
+- Use all 40 MediaPipe FACEMESH_LIPS landmark indices for more accurate mouth detection ([#18](https://github.com/cacoos/trackhands/pull/18))
+- Restore focus to previous window on warning dismiss ([#16](https://github.com/cacoos/trackhands/pull/16))
+- Remove confusing 'Run in background' button ([#15](https://github.com/cacoos/trackhands/pull/15))
+
 ## [1.0.3] - 2025-12-10
 
 ### Fixed
