@@ -26,8 +26,10 @@ export function Footer() {
           >
             Releases
           </a>
+
           <Link
             href="/privacy"
+            onClick={() => window.scrollTo(0, 0)}
             className="text-xs text-muted hover:text-foreground transition-colors"
           >
             Privacy
