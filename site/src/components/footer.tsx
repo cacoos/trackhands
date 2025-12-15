@@ -1,3 +1,5 @@
+import { Link } from "wouter";
+
 export function Footer() {
   return (
     <footer className="relative py-6 px-6 sm:px-10 lg:px-4 border-t border-white/5">
@@ -24,9 +26,14 @@ export function Footer() {
           >
             Releases
           </a>
+          <Link
+            href="/privacy"
+            className="text-xs text-muted hover:text-foreground transition-colors"
+          >
+            Privacy
+          </Link>
         </div>
       </div>
     </footer>
   );
 }
-

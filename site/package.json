@@ -14,7 +14,8 @@
     "@tailwindcss/vite": "^4.1.18",
     "hugeicons-react": "^0.3.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "wouter": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
