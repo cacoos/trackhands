@@ -1,9 +1,8 @@
-export { GitHubIcon } from "./github-icon";
-export { Navbar } from "./navbar";
-export { Hero } from "./hero";
 export { Demo } from "./demo";
 export { Features } from "./features";
-export { HowItWorks } from "./how-it-works";
-export { Privacy } from "./privacy";
-export { CTA } from "./cta";
 export { Footer } from "./footer";
+export { GitHubIcon } from "./github-icon";
+export { Hero } from "./hero";
+export { HowItWorks } from "./how-it-works";
+export { Navbar } from "./navbar";
+export { Privacy } from "./privacy";

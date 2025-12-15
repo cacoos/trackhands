@@ -19,7 +19,7 @@ export function Hero() {
           <div className="flex flex-col sm:flex-row gap-2">
             <a
               href="https://github.com/cacoos/trackhands/releases/latest"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-foreground text-surface rounded-lg text-sm font-medium hover:bg-foreground/90 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-foreground text-surface rounded-lg text-sm font-medium hover:bg-foreground/90 transition-all active:scale-[0.98]"
             >
               <Download04Icon size={14} />
               Download for Free
