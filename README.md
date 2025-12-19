@@ -6,6 +6,8 @@ TrackHands is a cross-platform desktop app that detects when your fingers are ne
 
 [![Latest Release](https://img.shields.io/github/v/release/cacoos/trackhands?label=Download&style=for-the-badge)](https://github.com/cacoos/trackhands/releases/latest)
 
+https://github.com/user-attachments/assets/f859b318-9e49-4d38-b4b1-8684767fd918
+
 ## Installation
 
 ### From Release
